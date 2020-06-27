@@ -8,4 +8,4 @@ before_install:
 
 scripts:
         #- docker run docker-react npm run start -- --coverage
-        - docker run -e CI=true lokeshkd/docker-react npm run start
+        - docker run -e CI=true lokeshkd/docker-react npm run test
