@@ -4,8 +4,8 @@ services:
         - docker
 
 before_install:
-        - docker build -t LokeshKD/docker-react -f ./frontend/Dockerfile.dev ./frontend/.
+        - docker build -t lokeshkd/docker-react -f ./frontend/Dockerfile.dev ./frontend/.
 
 scripts:
         #- docker run docker-react npm run start -- --coverage
-        - docker run -e CI=true LokeshKD/docker-react npm run start
+        - docker run -e CI=true lokeshkd/docker-react npm run start

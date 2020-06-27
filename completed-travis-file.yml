@@ -5,7 +5,7 @@ services:
   - docker
 
 before_install:
-  - docker build -t LokeshKD/docker-react -f Dockerfile.dev .
+  - docker build -t lokeshkd/docker-react -f Dockerfile.dev .
 
 script:
-  - docker run -e CI=true LokeshKD/docker-react npm run test
+  - docker run -e CI=true lokeshkd/docker-react npm run test
