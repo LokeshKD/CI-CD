@@ -1,0 +1,40 @@
+language: generic
+sudo: required
+services:
+        - docker
+
+before_install:
+        - docker build -t lokeshkd/react-test -f ./complex/client/Dockerfile.dev ./complex/client/.
+
+scripts:
+        #- docker run docker-react npm run start -- --coverage
+        - docker run -e CI=true lokeshkd/react-test npm run test
+
+after_success:
+        # Build production grade docker images
+        - docker build -t lokeshkd/multi-client ./complex/client/.
+        - docker build -t lokeshkd/multi-server ./complex/server/.
+        - docker build -t lokeshkd/multi-nginx  ./complex/nginx/.
+        - docker build -t lokeshkd/multi-worker ./complex/worker/.
+
+        # Tell Travis how to login to docker hub.
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+        # Tell Travis to push all the builds to docker hub.
+        - docker push lokeshkd/multi-client
+        - docker push lokeshkd/multi-server
+        - docker push lokeshkd/multi-nginx
+        - docker push lokeshkd/multi-worker
+
+deploy:
+        edge: true
+        provider: elasticbeanstalk
+        region: us-west-2
+        app: multi-docker
+        env: MultiDocker-env
+        bucket_name: elasticbeanstalk-us-west-2-356458654543
+        bucket_path: docker-multi
+        on:
+                branch: master
+        access_key_id: $AWS_ACCESS_KEY
+        secret_access_key: $AWS_SECRET_KEY
